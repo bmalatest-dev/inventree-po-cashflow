@@ -170,3 +170,21 @@ The Jan 2027 column is present because an outstanding line exists in that month,
 but the Other/CAD Jan 2027 value remains blank because the line has no unit price.
 
 Also rerun Outstanding PO Line Detail and confirm it remains unchanged.
+
+## 16. v0.1.5 missing target date
+
+Create or identify an outstanding PO line with:
+- no line target date;
+- no PO header target date.
+
+Expected:
+- detail export shows `Missing Target Date = YES`;
+- Forecast Month = `No Target Date`;
+- matrix includes a final `No Target Date` column;
+- the line's outstanding value appears in that column if a valid price exists.
+
+Also test:
+- blank line target date + populated PO target date
+Expected:
+- PO target date is used;
+- `Missing Target Date` remains blank.

@@ -57,7 +57,7 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
         "Monthly cashflow matrix for open Purchase Order lines, grouped by "
         "Project Code and currency."
     )
-    VERSION = "0.1.4"
+    VERSION = "0.1.5"
     MIN_VERSION = "1.4.0"
     LICENSE = "MIT"
 
@@ -159,6 +159,7 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
             discount = dec(getattr(line, "discount", 0))
             value = outstanding_value(ordered, received, unit_price, discount)
             target = self._target_date(line)
+            missing_target_date = target is None
             order = line.order
             supplier = getattr(order, "supplier", None)
             part = self._part_info(line)
@@ -174,6 +175,7 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
                 "currency": self._currency(line),
                 "target_date": target,
                 "month_key": month_key(target),
+                "missing_target_date": missing_target_date,
                 "ordered_qty": ordered,
                 "received_qty": received,
                 "outstanding_qty": remaining,
@@ -237,6 +239,7 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
                 ("outstanding_value", "Outstanding Value"),
                 ("target_date", "Target Date"),
                 ("forecast_month", "Forecast Month"),
+                ("missing_target_date", "Missing Target Date"),
                 ("missing_price", "Missing Price"),
             ]
             for key, label in detail_headers:
@@ -302,6 +305,7 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
                         row["target_date"].isoformat() if row["target_date"] else ""
                     ),
                     "forecast_month": month_label(row["month_key"]),
+                    "missing_target_date": "YES" if row["missing_target_date"] else "",
                     "missing_price": "YES" if row["missing_price"] else "",
                 })
             return detail

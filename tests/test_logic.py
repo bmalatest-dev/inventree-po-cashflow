@@ -100,6 +100,13 @@ class ExporterIntegrationSourceTests(unittest.TestCase):
         self.assertGreater(header_pos, -1)
         self.assertIn("_po_cashflow_months", source)
 
+    def test_missing_target_date_flag_contract(self):
+        plugin_path = Path(__file__).resolve().parents[1] / "po_cashflow" / "plugin.py"
+        source = plugin_path.read_text()
+        self.assertIn('"missing_target_date": missing_target_date', source)
+        self.assertIn('("missing_target_date", "Missing Target Date")', source)
+        self.assertIn('"missing_target_date": "YES" if row["missing_target_date"] else ""', source)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,3 +1,11 @@
+## v0.1.5
+
+- Adds `Missing Target Date` to the detail export.
+- The flag is `YES` only when both the PO line target date and PO header target date are blank.
+- Lines with no usable target date remain in the report and are grouped under the `No Target Date` matrix column.
+- Missing-price behavior is unchanged.
+- Cashflow calculations are unchanged.
+
 ## v0.1.4
 
 - Fixes blank Monthly Matrix values.
