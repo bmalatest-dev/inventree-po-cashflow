@@ -103,3 +103,12 @@ Export Matrix CSV and Detail CSV.
 Expected:
 - Matrix CSV matches the on-screen monthly matrix.
 - Detail CSV contains every included outstanding PO line and the values used for aggregation.
+
+## 12. v0.1.1 navigation
+
+- Enable navigation integration in InvenTree.
+- Install / enable v0.1.1.
+- Restart InvenTree if required for plugin navigation registration.
+- Confirm `Downloads` appears in the main navigation.
+- Confirm `Downloads > PO Cashflow` opens the report.
+- Confirm both CSV export buttons still work.

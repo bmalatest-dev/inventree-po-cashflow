@@ -40,7 +40,7 @@ class PurchaseOrderCashflowPlugin(NavigationMixin, UrlsMixin, InvenTreePlugin):
         "Monthly cashflow matrix for open Purchase Order lines, grouped by "
         "Project Code and currency."
     )
-    VERSION = "0.1.0"
+    VERSION = "0.1.1"
     MIN_VERSION = "1.4.0"
     LICENSE = "MIT"
 
@@ -51,8 +51,8 @@ class PurchaseOrderCashflowPlugin(NavigationMixin, UrlsMixin, InvenTreePlugin):
             "icon": "ti ti-cash",
         }
     ]
-    NAVIGATION_TAB_NAME = "Cashflow"
-    NAVIGATION_TAB_ICON = "ti ti-cash"
+    NAVIGATION_TAB_NAME = "Downloads"
+    NAVIGATION_TAB_ICON = "ti ti-download"
 
     def setup_urls(self):
         return [

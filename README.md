@@ -1,3 +1,10 @@
+## v0.1.1
+
+- Moves the PO Cashflow report entry into the `Downloads` navigation group.
+- Cashflow calculation logic is unchanged from v0.1.0.
+- The report page still provides the monthly matrix, detailed outstanding PO lines,
+  Matrix CSV export and Detail CSV export.
+
 # InvenTree PO Cashflow
 
 Initial Per Vices cashflow reporting plugin for InvenTree.
