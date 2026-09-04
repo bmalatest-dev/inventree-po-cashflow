@@ -1,3 +1,11 @@
+## v0.1.3
+
+- Fixes Monthly Matrix exports which previously omitted all month columns.
+- Discovers the required target-month columns before InvenTree finalizes the export schema.
+- Keeps Project Code and currency rows unchanged.
+- Formats exported monetary values to two decimal places.
+- Cashflow calculation logic is unchanged.
+
 ## v0.1.2
 
 - Registers PO Cashflow using InvenTree's `DataExportMixin`.

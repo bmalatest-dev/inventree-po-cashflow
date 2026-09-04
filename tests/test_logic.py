@@ -83,6 +83,12 @@ class ExporterIntegrationSourceTests(unittest.TestCase):
         self.assertIn("export_report_type", source)
         self.assertNotIn("NavigationMixin", source)
 
+    def test_matrix_headers_created_before_export_data(self):
+        plugin_path = Path(__file__).resolve().parents[1] / "po_cashflow" / "plugin.py"
+        source = plugin_path.read_text()
+        self.assertIn("_matrix_months_for_headers", source)
+        self.assertIn("headers[month] = month_label(month)", source)
+
 
 if __name__ == "__main__":
     unittest.main()

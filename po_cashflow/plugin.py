@@ -57,7 +57,7 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
         "Monthly cashflow matrix for open Purchase Order lines, grouped by "
         "Project Code and currency."
     )
-    VERSION = "0.1.2"
+    VERSION = "0.1.3"
     MIN_VERSION = "1.4.0"
     LICENSE = "MIT"
 
@@ -204,6 +204,30 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
         return f"/web/purchasing/purchase-order/{po_id}/"
 
 
+    def _matrix_months_for_headers(self):
+        """Return month keys required by the matrix export.
+
+        InvenTree finalizes export headers before export_data() runs, so dynamic
+        month columns must be discovered here rather than added later.
+        """
+        qs = (
+            PurchaseOrderLineItem.objects
+            .filter(
+                order__status__in=PurchaseOrderStatusGroups.OPEN,
+                quantity__gt=F("received"),
+            )
+            .values_list("target_date", "order__target_date")
+        )
+
+        months = set()
+        for line_target, po_target in qs:
+            months.add(month_key(line_target or po_target))
+
+        normal = sorted(x for x in months if x != NO_DATE)
+        if NO_DATE in months:
+            normal.append(NO_DATE)
+        return normal
+
     def update_headers(self, headers, context, **kwargs):
         """Define headers for the selected cashflow report."""
         report_type = context.get("export_report_type", "matrix")
@@ -233,12 +257,14 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
                 headers[key] = label
             return headers
 
-        # Matrix month headers are discovered during export_data. update_headers is
-        # called before export_data, so seed the stable columns here. The export
-        # engine uses keys present in returned rows even when extra dynamic month
-        # columns are appended to headers in export_data.
         headers["project_code"] = "Project Code"
         headers["currency"] = "Currency"
+
+        # InvenTree fixes the export schema before export_data() is called.
+        # Discover month columns now so they are present in the generated CSV/XLSX.
+        for month in self._matrix_months_for_headers():
+            headers[month] = month_label(month)
+
         return headers
 
     def export_data(
@@ -279,12 +305,12 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
                     "outstanding_qty": self._fmt_qty(row["outstanding_qty"]),
                     "unit_price": (
                         "" if row["unit_price"] is None
-                        else format(row["unit_price"], "f")
+                        else f"{row['unit_price']:.2f}"
                     ),
-                    "discount": format(row["discount"], "f"),
+                    "discount": f"{row['discount']:.2f}",
                     "outstanding_value": (
                         "" if row["outstanding_value"] is None
-                        else format(row["outstanding_value"], "f")
+                        else f"{row['outstanding_value']:.2f}"
                     ),
                     "target_date": (
                         row["target_date"].isoformat() if row["target_date"] else ""
@@ -295,11 +321,12 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
             return detail
 
         matrix = aggregate_matrix(rows)
-        months = sorted_months(rows)
 
-        # Add dynamic month columns in chronological order.
-        for month in months:
-            headers[month] = month_label(month)
+        # Use the month columns which update_headers() declared before export began.
+        months = [
+            key for key in headers.keys()
+            if key not in ("project_code", "currency")
+        ]
 
         result = []
         for (project, currency), values in matrix.items():
@@ -309,7 +336,7 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
             }
             for month in months:
                 row[month] = (
-                    format(values[month], "f")
+                    f"{values[month]:.2f}"
                     if month in values
                     else ""
                 )

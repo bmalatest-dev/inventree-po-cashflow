@@ -127,3 +127,29 @@ Expected:
 8. Confirm table filters/search are respected.
 9. Confirm fully received lines are excluded.
 10. Confirm only open PO statuses contribute.
+
+## 14. v0.1.3 matrix regression
+
+Using the current PO-0006 / PO-0007 test dataset:
+
+Expected detail lines:
+- PO-0006 Crimson USD Sep 2026 = 2,500.00
+- PO-0006 Cyan USD Oct 2026 = 750.00
+- PO-0006 No Project Code USD Sep 2026 = 2,500.00
+- PO-0007 Other CAD Dec 2026 = 350.00
+- PO-0007 Other CAD Jan 2027 = missing price / excluded from matrix
+- PO-0007 Crimson CAD Sep 2026 = 500.00
+
+Expected matrix columns:
+- Sep 2026
+- Oct 2026
+- Dec 2026
+- Jan 2027
+
+Expected matrix:
+- Crimson / CAD: Sep 2026 = 500.00
+- Crimson / USD: Sep 2026 = 2,500.00
+- Cyan / USD: Oct 2026 = 750.00
+- No Project Code / USD: Sep 2026 = 2,500.00
+- Other / CAD: Dec 2026 = 350.00
+- Other / CAD: Jan 2027 blank because that outstanding line has no price
