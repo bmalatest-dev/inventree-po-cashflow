@@ -153,3 +153,20 @@ Expected matrix:
 - No Project Code / USD: Sep 2026 = 2,500.00
 - Other / CAD: Dec 2026 = 350.00
 - Other / CAD: Jan 2027 blank because that outstanding line has no price
+
+## 15. v0.1.4 matrix value regression
+
+Using the PO-0006 / PO-0007 dataset, export Monthly Matrix.
+
+Expected:
+Project Code,Currency,Sep 2026,Oct 2026,Dec 2026,Jan 2027
+Crimson,CAD,500.00,,,
+Crimson,USD,2500.00,,,
+Cyan,USD,,750.00,,
+No Project Code,USD,2500.00,,,
+Other,CAD,,,350.00,
+
+The Jan 2027 column is present because an outstanding line exists in that month,
+but the Other/CAD Jan 2027 value remains blank because the line has no unit price.
+
+Also rerun Outstanding PO Line Detail and confirm it remains unchanged.

@@ -1,3 +1,11 @@
+## v0.1.4
+
+- Fixes blank Monthly Matrix values.
+- Accounts for InvenTree's export lifecycle: `export_data()` runs before `update_headers()`.
+- Matrix month keys and values are now calculated from the actual filtered Purchase Order dataset.
+- The month list is carried through the per-export context so the final headers exactly match the generated rows.
+- Detail export and cashflow calculations are unchanged.
+
 ## v0.1.3
 
 - Fixes Monthly Matrix exports which previously omitted all month columns.

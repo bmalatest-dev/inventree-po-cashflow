@@ -57,7 +57,7 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
         "Monthly cashflow matrix for open Purchase Order lines, grouped by "
         "Project Code and currency."
     )
-    VERSION = "0.1.3"
+    VERSION = "0.1.4"
     MIN_VERSION = "1.4.0"
     LICENSE = "MIT"
 
@@ -204,29 +204,15 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
         return f"/web/purchasing/purchase-order/{po_id}/"
 
 
-    def _matrix_months_for_headers(self):
-        """Return month keys required by the matrix export.
+    @staticmethod
+    def _matrix_months_for_headers(context):
+        """Return matrix month keys prepared by export_data().
 
-        InvenTree finalizes export headers before export_data() runs, so dynamic
-        month columns must be discovered here rather than added later.
+        InvenTree calls export_data() before update_headers(). The same export
+        context dictionary is then passed to update_headers(), so it is the safe
+        place to carry the dynamic month schema for this specific export.
         """
-        qs = (
-            PurchaseOrderLineItem.objects
-            .filter(
-                order__status__in=PurchaseOrderStatusGroups.OPEN,
-                quantity__gt=F("received"),
-            )
-            .values_list("target_date", "order__target_date")
-        )
-
-        months = set()
-        for line_target, po_target in qs:
-            months.add(month_key(line_target or po_target))
-
-        normal = sorted(x for x in months if x != NO_DATE)
-        if NO_DATE in months:
-            normal.append(NO_DATE)
-        return normal
+        return list(context.get("_po_cashflow_months") or [])
 
     def update_headers(self, headers, context, **kwargs):
         """Define headers for the selected cashflow report."""
@@ -262,7 +248,7 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
 
         # InvenTree fixes the export schema before export_data() is called.
         # Discover month columns now so they are present in the generated CSV/XLSX.
-        for month in self._matrix_months_for_headers():
+        for month in self._matrix_months_for_headers(context):
             headers[month] = month_label(month)
 
         return headers
@@ -321,12 +307,12 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
             return detail
 
         matrix = aggregate_matrix(rows)
+        months = sorted_months(rows)
 
-        # Use the month columns which update_headers() declared before export began.
-        months = [
-            key for key in headers.keys()
-            if key not in ("project_code", "currency")
-        ]
+        # InvenTree invokes export_data() before update_headers(). Populate the
+        # dynamic month values now, and carry the exact filtered month list forward
+        # in the per-export context so update_headers() can declare matching columns.
+        context["_po_cashflow_months"] = months
 
         result = []
         for (project, currency), values in matrix.items():

@@ -88,6 +88,17 @@ class ExporterIntegrationSourceTests(unittest.TestCase):
         source = plugin_path.read_text()
         self.assertIn("_matrix_months_for_headers", source)
         self.assertIn("headers[month] = month_label(month)", source)
+        self.assertIn('context["_po_cashflow_months"] = months', source)
+        self.assertIn("months = sorted_months(rows)", source)
+
+    def test_matrix_export_uses_rows_before_headers(self):
+        plugin_path = Path(__file__).resolve().parents[1] / "po_cashflow" / "plugin.py"
+        source = plugin_path.read_text()
+        export_pos = source.find("def export_data")
+        header_pos = source.find("def update_headers")
+        self.assertGreater(export_pos, -1)
+        self.assertGreater(header_pos, -1)
+        self.assertIn("_po_cashflow_months", source)
 
 
 if __name__ == "__main__":
