@@ -73,5 +73,16 @@ class CashflowLogicTests(unittest.TestCase):
         )
 
 
+
+class ExporterIntegrationSourceTests(unittest.TestCase):
+    def test_v012_uses_data_export_mixin(self):
+        plugin_path = Path(__file__).resolve().parents[1] / "po_cashflow" / "plugin.py"
+        source = plugin_path.read_text()
+        self.assertIn("DataExportMixin", source)
+        self.assertIn("model_class == PurchaseOrder", source)
+        self.assertIn("export_report_type", source)
+        self.assertNotIn("NavigationMixin", source)
+
+
 if __name__ == "__main__":
     unittest.main()

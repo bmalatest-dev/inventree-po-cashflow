@@ -1,3 +1,14 @@
+## v0.1.2
+
+- Registers PO Cashflow using InvenTree's `DataExportMixin`.
+- `PO Cashflow` is selectable from the Download button on the main Purchase Orders table.
+- Export options:
+  - Monthly Matrix
+  - Outstanding PO Line Detail
+- The export respects the Purchase Order table queryset / filters, then limits cashflow to open POs.
+- Removes the standalone navigation / URL report entry.
+- Cashflow calculation assumptions are unchanged.
+
 ## v0.1.1
 
 - Moves the PO Cashflow report entry into the `Downloads` navigation group.

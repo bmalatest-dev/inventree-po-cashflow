@@ -112,3 +112,18 @@ Expected:
 - Confirm `Downloads` appears in the main navigation.
 - Confirm `Downloads > PO Cashflow` opens the report.
 - Confirm both CSV export buttons still work.
+
+## 13. v0.1.2 native PO download integration
+
+1. Go to Purchasing > Purchase Orders.
+2. Click the Download icon in the top-right of the Purchase Orders table.
+3. Confirm `PO Cashflow` appears as an Export Plugin option.
+4. Select `PO Cashflow`.
+5. Confirm `Cashflow Report` provides:
+   - Monthly Matrix
+   - Outstanding PO Line Detail
+6. Export Monthly Matrix as CSV.
+7. Export Outstanding PO Line Detail as CSV.
+8. Confirm table filters/search are respected.
+9. Confirm fully received lines are excluded.
+10. Confirm only open PO statuses contribute.
