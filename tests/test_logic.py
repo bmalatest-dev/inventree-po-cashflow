@@ -107,6 +107,12 @@ class ExporterIntegrationSourceTests(unittest.TestCase):
         self.assertIn('("missing_target_date", "Missing Target Date")', source)
         self.assertIn('"missing_target_date": "YES" if row["missing_target_date"] else ""', source)
 
+    def test_target_date_does_not_fallback_to_po_header(self):
+        plugin_path = Path(__file__).resolve().parents[1] / "po_cashflow" / "plugin.py"
+        source = plugin_path.read_text()
+        self.assertIn('return getattr(line, "target_date", None)', source)
+        self.assertNotIn('getattr(line.order, "target_date", None)', source)
+
 
 if __name__ == "__main__":
     unittest.main()

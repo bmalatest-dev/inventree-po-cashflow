@@ -57,7 +57,7 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
         "Monthly cashflow matrix for open Purchase Order lines, grouped by "
         "Project Code and currency."
     )
-    VERSION = "0.1.5"
+    VERSION = "0.1.6"
     MIN_VERSION = "1.4.0"
     LICENSE = "MIT"
 
@@ -108,7 +108,8 @@ class PurchaseOrderCashflowPlugin(DataExportMixin, InvenTreePlugin):
 
     @staticmethod
     def _target_date(line):
-        return getattr(line, "target_date", None) or getattr(line.order, "target_date", None)
+        """Cashflow timing is based strictly on the PO line target date."""
+        return getattr(line, "target_date", None)
 
     @staticmethod
     def _part_info(line):

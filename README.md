@@ -1,3 +1,13 @@
+## v0.1.6
+
+- Cashflow timing now uses the Purchase Order **line target date only**.
+- Removes the fallback to the Purchase Order header target date.
+- If a line target date is blank:
+  - `Missing Target Date = YES`
+  - Forecast Month = `No Target Date`
+  - the outstanding value is grouped into the `No Target Date` matrix column.
+- All other cashflow calculations are unchanged.
+
 ## v0.1.5
 
 - Adds `Missing Target Date` to the detail export.

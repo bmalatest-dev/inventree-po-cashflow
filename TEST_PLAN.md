@@ -188,3 +188,18 @@ Also test:
 Expected:
 - PO target date is used;
 - `Missing Target Date` remains blank.
+
+## 17. v0.1.6 strict line target date
+
+Use PO-0006 / IC-Part-250 where the PO line has no target date.
+
+Expected detail:
+- Missing Target Date = YES
+- Target Date = blank
+- Forecast Month = No Target Date
+
+Expected matrix:
+- A `No Target Date` column is present.
+- The outstanding value for IC-Part-250 appears under its Project Code / Currency in that column.
+
+The PO header target date must NOT be used as a fallback.
