@@ -1,3 +1,11 @@
+## v0.1.7
+
+Cashflow now uses the effective expected receipt date for each outstanding PO line:
+
+`line Target Date -> PO Target Date fallback`
+
+A blank line date inherits the PO date. A populated line date is the current line-specific ETA and moves that outstanding value into the corresponding forecast month.
+
 ## v0.1.6
 
 - Cashflow timing now uses the Purchase Order **line target date only**.
